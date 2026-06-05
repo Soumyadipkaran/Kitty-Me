@@ -116,8 +116,8 @@ function Index() {
         {GROUPS.map((group) => {
           const cols =
             group.count === 4
-              ? "md:grid-cols-4"
-              : "md:grid-cols-3 lg:grid-cols-6";
+              ? "md:grid-cols-2 lg:grid-cols-2"
+              : "md:grid-cols-3 lg:grid-cols-3";
           return (
             <section key={group.key} className="px-6 py-20 md:py-28">
               <div className="mx-auto max-w-6xl text-center mb-12">
