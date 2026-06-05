@@ -34,10 +34,21 @@ const DEFAULTS: Record<Group["key"], string[]> = {
   together: [couple2, couple1, couple2, couple1, couple2, couple1],
 };
 
+type Song = { title: string; artist: string; src: string };
+
+const SONGS: Song[] = [
+  { title: "A Thousand Years", artist: "Christina Perri", src: "https://cdn.pixabay.com/audio/2022/10/30/audio_347111d654.mp3" },
+  { title: "Romantic Piano", artist: "Sample One", src: "https://cdn.pixabay.com/audio/2023/02/28/audio_550d815fb5.mp3" },
+  { title: "Soft Love", artist: "Sample Two", src: "https://cdn.pixabay.com/audio/2022/03/15/audio_5cb24aa052.mp3" },
+  { title: "Dreamy Strings", artist: "Sample Three", src: "https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3" },
+  { title: "Sweet Memories", artist: "Sample Four", src: "https://cdn.pixabay.com/audio/2024/02/14/audio_d51e9b9ee1.mp3" },
+];
+
 function Index() {
   const [scrollY, setScrollY] = useState(0);
   const [photos, setPhotos] = useState<Record<Group["key"], string[]>>(DEFAULTS);
   const [playing, setPlaying] = useState(false);
+  const [songIdx, setSongIdx] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
@@ -54,6 +65,20 @@ function Index() {
       setPlaying(false);
     } else {
       a.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    }
+  };
+
+  const pickSong = (i: number) => {
+    const a = audioRef.current;
+    setSongIdx(i);
+    setPlaying(false);
+    if (a) {
+      a.pause();
+      // load new src on next tick
+      setTimeout(() => {
+        a.load();
+        a.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+      }, 50);
     }
   };
 
@@ -190,8 +215,8 @@ function Index() {
             <p className="text-script text-2xl text-primary inline-flex items-center gap-2">
               <Music2 size={20} /> our song
             </p>
-            <h2 className="text-display text-5xl md:text-6xl mt-2">A Thousand Years</h2>
-            <p className="text-muted-foreground mt-2">Christina Perri</p>
+            <h2 className="text-display text-5xl md:text-6xl mt-2">{SONGS[songIdx].title}</h2>
+            <p className="text-muted-foreground mt-2">{SONGS[songIdx].artist}</p>
 
             <button
               onClick={togglePlay}
@@ -217,11 +242,35 @@ function Index() {
 
             <audio
               ref={audioRef}
-              src="https://cdn.pixabay.com/audio/2022/10/30/audio_347111d654.mp3"
+              src={SONGS[songIdx].src}
               loop
               onEnded={() => setPlaying(false)}
             />
             <p className="text-xs text-muted-foreground mt-6">Tap play to hear our melody</p>
+
+            <div className="mt-8 border-t border-primary/20 pt-6 text-left">
+              <p className="text-script text-xl text-primary text-center mb-3">choose a song ♡</p>
+              <ul className="space-y-2">
+                {SONGS.map((s, i) => (
+                  <li key={i}>
+                    <button
+                      onClick={() => pickSong(i)}
+                      className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left transition-all ${
+                        songIdx === i
+                          ? "bg-primary text-primary-foreground shadow-[var(--shadow-soft)]"
+                          : "bg-white/60 hover:bg-white/90 text-foreground"
+                      }`}
+                    >
+                      <span className="flex flex-col">
+                        <span className="font-medium text-sm">{s.title}</span>
+                        <span className={`text-xs ${songIdx === i ? "text-primary-foreground/80" : "text-muted-foreground"}`}>{s.artist}</span>
+                      </span>
+                      {songIdx === i && playing ? <Pause size={16} /> : <Play size={16} />}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 
