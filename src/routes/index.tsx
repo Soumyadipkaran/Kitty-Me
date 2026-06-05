@@ -23,15 +23,15 @@ export const Route = createFileRoute("/")({
 type Group = { key: "her" | "moments" | "together"; title: string; script: string; count: number };
 
 const GROUPS: Group[] = [
-  { key: "her", title: "Just Her", script: "my muse", count: 5 },
-  { key: "moments", title: "Little Moments", script: "in between", count: 3 },
-  { key: "together", title: "Us, Together", script: "you & me", count: 5 },
+  { key: "her", title: "Just Her", script: "my muse", count: 6 },
+  { key: "moments", title: "Little Moments", script: "in between", count: 4 },
+  { key: "together", title: "Us, Together", script: "you & me", count: 6 },
 ];
 
 const DEFAULTS: Record<Group["key"], string[]> = {
-  her: [couple1, couple2, couple1, couple2, couple1],
-  moments: [couple3, couple3, couple3],
-  together: [couple2, couple1, couple2, couple1, couple2],
+  her: [couple1, couple2, couple1, couple2, couple1, couple2],
+  moments: [couple3, couple3, couple3, couple3],
+  together: [couple2, couple1, couple2, couple1, couple2, couple1],
 };
 
 function Index() {
@@ -115,9 +115,9 @@ function Index() {
         {/* PHOTO FRAMES — three grouped galleries */}
         {GROUPS.map((group) => {
           const cols =
-            group.count === 3
-              ? "md:grid-cols-3"
-              : "md:grid-cols-3 lg:grid-cols-5";
+            group.count === 4
+              ? "md:grid-cols-4"
+              : "md:grid-cols-3 lg:grid-cols-6";
           return (
             <section key={group.key} className="px-6 py-20 md:py-28">
               <div className="mx-auto max-w-6xl text-center mb-12">
