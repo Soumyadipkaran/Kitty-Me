@@ -1,29 +1,209 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
+import { Heart, Music2, Pause, Play, MapPin, Upload } from "lucide-react";
+import floralCats from "@/assets/floral-cats.jpg";
+import pinkBg from "@/assets/pink-bg.jpg";
+import couple1 from "@/assets/couple-1.jpg";
+import couple2 from "@/assets/couple-2.jpg";
+import couple3 from "@/assets/couple-3.jpg";
+import { PetalRain } from "@/components/PetalRain";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "Forever Us — A Love Story" },
+      { name: "description", content: "A romantic keepsake page with photos, our place on the map, and our song." },
+      { property: "og:title", content: "Forever Us — A Love Story" },
+      { property: "og:description", content: "A romantic keepsake page with photos, our place, and our song." },
     ],
   }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  const [scrollY, setScrollY] = useState(0);
+  const [photos, setPhotos] = useState<string[]>([couple1, couple2, couple3]);
+  const [playing, setPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    const onScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const togglePlay = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    if (playing) {
+      a.pause();
+      setPlaying(false);
+    } else {
+      a.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    }
+  };
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>, idx: number) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    setPhotos((prev) => {
+      const next = [...prev];
+      next[idx] = url;
+      return next;
+    });
+  };
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
+    <div className="relative min-h-screen overflow-x-hidden romance-gradient">
+      {/* Layered moving background */}
+      <div
+        aria-hidden
+        className="fixed inset-0 z-0 opacity-30 mix-blend-multiply"
+        style={{
+          backgroundImage: `url(${floralCats})`,
+          backgroundSize: "720px",
+          backgroundRepeat: "repeat",
+          transform: `translateY(${scrollY * 0.15}px)`,
+          transition: "transform 0.1s linear",
+        }}
       />
+      <div
+        aria-hidden
+        className="fixed inset-0 z-0 opacity-50"
+        style={{
+          backgroundImage: `url(${pinkBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          transform: `translateY(${scrollY * -0.25}px) scale(1.1)`,
+          mixBlendMode: "screen",
+        }}
+      />
+      <PetalRain />
+
+      <main className="relative z-10">
+        {/* HERO */}
+        <section className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
+          <p className="text-script text-3xl md:text-5xl text-primary mb-4 animate-heartbeat inline-flex items-center gap-3">
+            <Heart className="fill-primary text-primary" /> you & me <Heart className="fill-primary text-primary" />
+          </p>
+          <h1 className="text-display text-6xl md:text-9xl font-medium tracking-tight text-foreground leading-none">
+            Forever <em className="text-script text-primary not-italic">Us</em>
+          </h1>
+          <p className="mt-6 max-w-xl text-lg md:text-xl text-muted-foreground">
+            A little corner of the internet for the moments, places and songs that make our story.
+          </p>
+          <div className="mt-12 animate-bounce text-primary/70 text-sm tracking-widest uppercase">
+            scroll for our story
+          </div>
+        </section>
+
+        {/* PHOTO FRAME */}
+        <section className="px-6 py-24 md:py-32">
+          <div className="mx-auto max-w-6xl text-center mb-16">
+            <p className="text-script text-2xl text-primary">our moments</p>
+            <h2 className="text-display text-5xl md:text-7xl">Captured in Pink</h2>
+          </div>
+          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
+            {photos.map((src, i) => (
+              <label
+                key={i}
+                className="group relative block cursor-pointer overflow-hidden rounded-[2rem] bg-card p-3 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-2 hover:rotate-1"
+                style={{ transform: `rotate(${i === 1 ? 0 : i === 0 ? -2 : 2}deg)` }}
+              >
+                <div className="relative overflow-hidden rounded-[1.5rem] border-4 border-white">
+                  <img
+                    src={src}
+                    alt={`Our memory ${i + 1}`}
+                    className="aspect-[3/4] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/30 via-transparent to-transparent" />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
+                    <div className="rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-primary flex items-center gap-2">
+                      <Upload size={14} /> Change photo
+                    </div>
+                  </div>
+                </div>
+                <p className="text-script text-xl text-primary mt-3">memory no. {i + 1}</p>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="sr-only"
+                  onChange={(e) => handleUpload(e, i)}
+                />
+              </label>
+            ))}
+          </div>
+        </section>
+
+        {/* MAP */}
+        <section className="px-6 py-24 md:py-32">
+          <div className="mx-auto max-w-5xl text-center mb-12">
+            <p className="text-script text-2xl text-primary inline-flex items-center gap-2">
+              <MapPin size={20} /> our place
+            </p>
+            <h2 className="text-display text-5xl md:text-7xl">Where it All Began</h2>
+            <p className="mt-4 text-muted-foreground">The little spot on the map that holds our heart.</p>
+          </div>
+          <div className="mx-auto max-w-5xl overflow-hidden rounded-[2rem] border-8 border-white shadow-[var(--shadow-soft)]">
+            <iframe
+              title="Our Place"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=2.2945%2C48.8534%2C2.3045%2C48.8634&layer=mapnik&marker=48.8584,2.2995"
+              className="h-[460px] w-full"
+              loading="lazy"
+            />
+          </div>
+          <p className="mx-auto mt-4 max-w-5xl text-center text-sm text-muted-foreground text-script text-xl">
+            ♡ Paris, France ♡
+          </p>
+        </section>
+
+        {/* SONG */}
+        <section className="px-6 py-24 md:py-32">
+          <div className="mx-auto max-w-3xl rounded-[2.5rem] bg-white/70 p-10 md:p-14 backdrop-blur-xl shadow-[var(--shadow-soft)] border border-primary/20 text-center">
+            <p className="text-script text-2xl text-primary inline-flex items-center gap-2">
+              <Music2 size={20} /> our song
+            </p>
+            <h2 className="text-display text-5xl md:text-6xl mt-2">A Thousand Years</h2>
+            <p className="text-muted-foreground mt-2">Christina Perri</p>
+
+            <button
+              onClick={togglePlay}
+              className="mt-8 inline-flex h-20 w-20 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-soft)] transition-transform hover:scale-110"
+              aria-label={playing ? "Pause" : "Play"}
+            >
+              {playing ? <Pause size={32} /> : <Play size={32} className="ml-1" />}
+            </button>
+
+            <div className="mt-8 flex justify-center gap-1.5">
+              {Array.from({ length: 24 }).map((_, i) => (
+                <span
+                  key={i}
+                  className="w-1.5 rounded-full bg-primary/70"
+                  style={{
+                    height: playing ? `${10 + Math.sin(i * 0.7) * 18 + 14}px` : "6px",
+                    animation: playing ? `heart-beat ${0.8 + (i % 5) * 0.15}s ease-in-out infinite` : "none",
+                    transition: "height 0.3s ease",
+                  }}
+                />
+              ))}
+            </div>
+
+            <audio
+              ref={audioRef}
+              src="https://cdn.pixabay.com/audio/2022/10/30/audio_347111d654.mp3"
+              loop
+              onEnded={() => setPlaying(false)}
+            />
+            <p className="text-xs text-muted-foreground mt-6">Tap play to hear our melody</p>
+          </div>
+        </section>
+
+        <footer className="relative z-10 py-12 text-center text-script text-2xl text-primary">
+          made with <Heart className="inline fill-primary text-primary animate-heartbeat" size={20} /> for us
+        </footer>
+      </main>
     </div>
   );
 }
