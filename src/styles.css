@@ -148,5 +148,38 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
   }
 }
+
+@keyframes float-petal {
+  0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.9; }
+  90% { opacity: 0.9; }
+  100% { transform: translateY(110vh) translateX(40px) rotate(360deg); opacity: 0; }
+}
+
+@keyframes heart-beat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@keyframes shimmer-bg {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-heartbeat { animation: heart-beat 1.4s ease-in-out infinite; }
+
+.romance-gradient {
+  background: linear-gradient(-45deg, #fce4ec, #f8bbd0, #f48fb1, #fad0c4, #ffdde1);
+  background-size: 400% 400%;
+  animation: shimmer-bg 18s ease infinite;
+}
+
+.text-script { font-family: var(--font-script); }
+.text-display { font-family: var(--font-display); }
