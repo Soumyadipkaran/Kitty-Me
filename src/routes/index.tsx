@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Heart, Music2, Pause, Play, MapPin, Upload } from "lucide-react";
+import { Heart, Music2, Pause, Play, MapPin, Upload, Sparkles, Camera } from "lucide-react";
 import floralCats from "@/assets/floral-cats.jpg";
 import pinkBg from "@/assets/pink-bg.jpg";
 import couple1 from "@/assets/couple-1.jpg";
@@ -20,9 +20,23 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+type Group = { key: "her" | "moments" | "together"; title: string; script: string; count: number };
+
+const GROUPS: Group[] = [
+  { key: "her", title: "Just Her", script: "my muse", count: 5 },
+  { key: "moments", title: "Little Moments", script: "in between", count: 3 },
+  { key: "together", title: "Us, Together", script: "you & me", count: 5 },
+];
+
+const DEFAULTS: Record<Group["key"], string[]> = {
+  her: [couple1, couple2, couple1, couple2, couple1],
+  moments: [couple3, couple3, couple3],
+  together: [couple2, couple1, couple2, couple1, couple2],
+};
+
 function Index() {
   const [scrollY, setScrollY] = useState(0);
-  const [photos, setPhotos] = useState<string[]>([couple1, couple2, couple3]);
+  const [photos, setPhotos] = useState<Record<Group["key"], string[]>>(DEFAULTS);
   const [playing, setPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -43,14 +57,14 @@ function Index() {
     }
   };
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>, idx: number) => {
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>, group: Group["key"], idx: number) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const url = URL.createObjectURL(file);
     setPhotos((prev) => {
-      const next = [...prev];
+      const next = [...prev[group]];
       next[idx] = url;
-      return next;
+      return { ...prev, [group]: next };
     });
   };
 
@@ -98,44 +112,55 @@ function Index() {
           </div>
         </section>
 
-        {/* PHOTO FRAME */}
-        <section className="px-6 py-24 md:py-32">
-          <div className="mx-auto max-w-6xl text-center mb-16">
-            <p className="text-script text-2xl text-primary">our moments</p>
-            <h2 className="text-display text-5xl md:text-7xl">Captured in Pink</h2>
-          </div>
-          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
-            {photos.map((src, i) => (
-              <label
-                key={i}
-                className="group relative block cursor-pointer overflow-hidden rounded-[2rem] bg-card p-3 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-2 hover:rotate-1"
-                style={{ transform: `rotate(${i === 1 ? 0 : i === 0 ? -2 : 2}deg)` }}
-              >
-                <div className="relative overflow-hidden rounded-[1.5rem] border-4 border-white">
-                  <img
-                    src={src}
-                    alt={`Our memory ${i + 1}`}
-                    className="aspect-[3/4] w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/30 via-transparent to-transparent" />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
-                    <div className="rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-primary flex items-center gap-2">
-                      <Upload size={14} /> Change photo
+        {/* PHOTO FRAMES — three grouped galleries */}
+        {GROUPS.map((group) => {
+          const cols =
+            group.count === 3
+              ? "md:grid-cols-3"
+              : "md:grid-cols-3 lg:grid-cols-5";
+          return (
+            <section key={group.key} className="px-6 py-20 md:py-28">
+              <div className="mx-auto max-w-6xl text-center mb-12">
+                <p className="text-script text-2xl text-primary inline-flex items-center gap-2">
+                  {group.key === "her" ? <Sparkles size={18} /> : group.key === "moments" ? <Camera size={18} /> : <Heart size={18} className="fill-primary" />}
+                  {group.script}
+                </p>
+                <h2 className="text-display text-5xl md:text-7xl">{group.title}</h2>
+              </div>
+              <div className={`mx-auto grid max-w-6xl grid-cols-2 gap-6 ${cols}`}>
+                {photos[group.key].map((src, i) => (
+                  <label
+                    key={i}
+                    className="group relative block cursor-pointer overflow-hidden rounded-[1.75rem] bg-card p-2.5 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-2 hover:rotate-1"
+                    style={{ transform: `rotate(${(i % 2 === 0 ? -1 : 1) * (1 + (i % 3))}deg)` }}
+                  >
+                    <div className="relative overflow-hidden rounded-[1.25rem] border-4 border-white">
+                      <img
+                        src={src}
+                        alt={`${group.title} photo ${i + 1}`}
+                        className="aspect-[3/4] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-primary/30 via-transparent to-transparent" />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
+                        <div className="rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-primary flex items-center gap-2">
+                          <Upload size={12} /> Change photo
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <p className="text-script text-xl text-primary mt-3">memory no. {i + 1}</p>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="sr-only"
-                  onChange={(e) => handleUpload(e, i)}
-                />
-              </label>
-            ))}
-          </div>
-        </section>
+                    <p className="text-script text-base text-primary mt-2 text-center">no. {i + 1}</p>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="sr-only"
+                      onChange={(e) => handleUpload(e, group.key, i)}
+                    />
+                  </label>
+                ))}
+              </div>
+            </section>
+          );
+        })}
 
         {/* MAP */}
         <section className="px-6 py-24 md:py-32">
