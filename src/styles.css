@@ -183,3 +183,36 @@
 
 .text-script { font-family: var(--font-script); }
 .text-display { font-family: var(--font-display); }
+
+/* Roaming cats */
+@keyframes cat-walk {
+  0%   { transform: translateX(-10vw) scaleX(1); }
+  49%  { transform: translateX(105vw) scaleX(1); }
+  50%  { transform: translateX(105vw) scaleX(-1); }
+  99%  { transform: translateX(-10vw) scaleX(-1); }
+  100% { transform: translateX(-10vw) scaleX(1); }
+}
+@keyframes cat-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+@keyframes cat-drift {
+  0%   { transform: translate(-10vw, 12vh) rotate(-8deg); }
+  50%  { transform: translate(85vw, 70vh) rotate(8deg); }
+  100% { transform: translate(-10vw, 12vh) rotate(-8deg); }
+}
+.cat-walk {
+  display: inline-block;
+  animation: cat-walk 28s linear infinite;
+  will-change: transform;
+}
+.cat-emoji {
+  display: inline-block;
+  font-size: 3rem;
+  filter: drop-shadow(0 6px 10px oklch(0.65 0.22 350 / 0.35));
+  animation: cat-bob 0.6s ease-in-out infinite;
+}
+.cat-drift {
+  animation: cat-drift 45s ease-in-out infinite;
+  filter: drop-shadow(0 6px 10px oklch(0.65 0.22 350 / 0.35));
+}

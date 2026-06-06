@@ -7,6 +7,7 @@ import couple1 from "@/assets/couple-1.jpg";
 import couple2 from "@/assets/couple-2.jpg";
 import couple3 from "@/assets/couple-3.jpg";
 import { PetalRain } from "@/components/PetalRain";
+import { RoamingCat } from "@/components/RoamingCat";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -119,6 +120,7 @@ function Index() {
         }}
       />
       <PetalRain />
+      <RoamingCat />
 
       <main className="relative z-10">
         {/* HERO */}
