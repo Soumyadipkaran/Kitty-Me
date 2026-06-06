@@ -42,8 +42,8 @@ export function RoamingCat() {
       </div>
 
       {/* Cat 3 — sleepy floating kitten that drifts diagonally */}
-      <div aria-hidden className="pointer-events-none fixed left-0 top-0 z-20">
-        <span className="cat-drift">🐈‍⬛</span>
+      <div aria-hidden className="pointer-events-none fixed left-0 top-0 z-20 text-4xl">
+        <span className="cat-drift inline-block">🐈</span>
       </div>
     </>
   );
