@@ -22,13 +22,40 @@ import us6 from "@/assets/us-6.jpg";
 import { PetalRain } from "@/components/PetalRain";
 import { RoamingCat } from "@/components/RoamingCat";
 
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+
+import song1 from "../assets/music/song1.mp3";
+import song2 from "../assets/music/song2.mp3";
+import song3 from "../assets/music/song3.mp3";
+import song4 from "../assets/music/song4.mp3";
+import song5 from "../assets/music/song5.mp3";
+import song6 from "../assets/music/song6.mp3";
+import song7 from "../assets/music/song7.mp3";
+
+
+
+
+
+
+
+
+const heartIcon = L.divIcon({
+  html: '<div style="font-size:42px;">💕</div>',
+  className: "",
+  iconSize: [42, 42],
+  iconAnchor: [21, 42],
+});
+
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Forever Us — A Love Story" },
-      { name: "description", content: "A romantic keepsake page with photos, our place on the map, and our song." },
-      { property: "og:title", content: "Forever Us — A Love Story" },
-      { property: "og:description", content: "A romantic keepsake page with photos, our place, and our song." },
+      { title: "Forever Us" },
+      { name: "description", content: "A keepsake page with photos, our place on the map, and our song." },
+      { property: "og:title", content: "Forever Us" },
+      { property: "og:description", content: "keepsake page with photos, our place, and our song." },
     ],
   }),
   component: Index,
@@ -52,11 +79,13 @@ const DEFAULTS: Record<Group["key"], string[]> = {
 type Song = { title: string; artist: string; src: string };
 
 const SONGS: Song[] = [
-  { title: "A Thousand Years", artist: "Christina Perri", src: "https://cdn.pixabay.com/audio/2022/10/30/audio_347111d654.mp3" },
-  { title: "Romantic Piano", artist: "Sample One", src: "https://cdn.pixabay.com/audio/2023/02/28/audio_550d815fb5.mp3" },
-  { title: "Soft Love", artist: "Sample Two", src: "https://cdn.pixabay.com/audio/2022/03/15/audio_5cb24aa052.mp3" },
-  { title: "Dreamy Strings", artist: "Sample Three", src: "https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3" },
-  { title: "Sweet Memories", artist: "Sample Four", src: "https://cdn.pixabay.com/audio/2024/02/14/audio_d51e9b9ee1.mp3" },
+  { title: "Yedhi Yedhi", artist: "♡♡♡", src: song1 },
+  { title: "Khat", artist: "Navjot Ahuja", src: song2 },
+  { title: "Those Eyes", artist: "New West", src: song3 },
+  { title: "Mann Mera", artist: "Gajendra Verma", src: song4 },
+  { title: "Arerey Manasa", artist: "Falaknuma Das", src: song5 },
+  { title: "Gulabi Aankhen", artist: "Sanam", src: song6 },
+  { title: "Preminche Premava", artist: "Nuvvu Nenu Prema", src: song7 },
 ];
 
 function Index() {
@@ -182,25 +211,40 @@ function Index() {
 
         {/* MAP */}
         <section className="px-6 py-24 md:py-32">
-          <div className="mx-auto max-w-5xl text-center mb-12">
-            <p className="text-script text-2xl text-primary inline-flex items-center gap-2">
-              <MapPin size={20} /> our place
-            </p>
-            <h2 className="text-display text-5xl md:text-7xl">Where it All Began</h2>
-            <p className="mt-4 text-muted-foreground">The little spot on the map that holds our heart.</p>
-          </div>
-          <div className="mx-auto max-w-5xl overflow-hidden rounded-[2rem] border-8 border-white shadow-[var(--shadow-soft)]">
-            <iframe
-              title="Our Place"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=2.2945%2C48.8534%2C2.3045%2C48.8634&layer=mapnik&marker=48.8584,2.2995"
-              className="h-[460px] w-full"
-              loading="lazy"
-            />
-          </div>
-          <p className="mx-auto mt-4 max-w-5xl text-center text-sm text-muted-foreground text-script text-xl">
-            ♡ Paris, France ♡
-          </p>
-        </section>
+  <div className="mx-auto max-w-5xl text-center mb-12">
+    <p className="text-script text-2xl text-primary inline-flex items-center gap-2">
+      <MapPin size={20} /> our place
+    </p>
+    <h2 className="text-display text-5xl md:text-7xl">
+      Where it All Began
+    </h2>
+    <p className="mt-4 text-muted-foreground">
+      The little spot on the map that holds our heart.
+    </p>
+  </div>
+
+  <div className="mx-auto max-w-5xl overflow-hidden rounded-[2rem] border-8 border-white shadow-[var(--shadow-soft)]">
+    <MapContainer
+      center={[12.825051, 80.219850]}
+      zoom={16}
+      scrollWheelZoom={true}
+      className="h-[460px] w-full"
+    >
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+      <Marker
+        position={[12.825051, 80.219850]}
+        icon={heartIcon}
+      >
+        
+      </Marker>
+    </MapContainer>
+  </div>
+
+  <p className="mx-auto mt-4 max-w-5xl text-center text-sm text-muted-foreground text-script text-xl">
+    ♡ Chennai ♡ Siruseri ♡ CTS ♡ SDB1 ♡
+  </p>
+</section>
 
         {/* SONG */}
         <section className="px-6 py-24 md:py-32">
@@ -268,7 +312,7 @@ function Index() {
         </section>
 
         <footer className="relative z-10 py-12 text-center text-script text-2xl text-primary">
-          made with <Heart className="inline fill-primary text-primary animate-heartbeat" size={20} /> for us
+          made with <Heart className="inline fill-primary text-primary animate-heartbeat" size={20} /> for us <Heart className="inline fill-primary text-primary animate-heartbeat" size={20} /> I'll keep irritating U forever.
         </footer>
       </main>
     </div>
