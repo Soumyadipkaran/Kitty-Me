@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Heart, Music2, Pause, Play, MapPin, Upload, Sparkles, Camera } from "lucide-react";
+import { Heart, Music2, Pause, Play, MapPin, Sparkles, Camera } from "lucide-react";
 import floralCats from "@/assets/floral-cats.jpg";
 import pinkBg from "@/assets/pink-bg.jpg";
 import couple1 from "@/assets/couple-1.jpg";
@@ -47,10 +47,10 @@ const SONGS: Song[] = [
 
 function Index() {
   const [scrollY, setScrollY] = useState(0);
-  const [photos, setPhotos] = useState<Record<Group["key"], string[]>>(DEFAULTS);
   const [playing, setPlaying] = useState(false);
   const [songIdx, setSongIdx] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const photos = DEFAULTS;
 
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY);
@@ -81,17 +81,6 @@ function Index() {
         a.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
       }, 50);
     }
-  };
-
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>, group: Group["key"], idx: number) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    setPhotos((prev) => {
-      const next = [...prev[group]];
-      next[idx] = url;
-      return { ...prev, [group]: next };
-    });
   };
 
   return (
@@ -156,9 +145,9 @@ function Index() {
               </div>
               <div className={`mx-auto grid max-w-6xl grid-cols-2 gap-6 ${cols}`}>
                 {photos[group.key].map((src, i) => (
-                  <label
+                  <div
                     key={i}
-                    className="group relative block cursor-pointer overflow-hidden rounded-[1.75rem] bg-card p-2.5 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-2 hover:rotate-1"
+                    className="group relative block overflow-hidden rounded-[1.75rem] bg-card p-2.5 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-2 hover:rotate-1"
                     style={{ transform: `rotate(${(i % 2 === 0 ? -1 : 1) * (1 + (i % 3))}deg)` }}
                   >
                     <div className="relative overflow-hidden rounded-[1.25rem] border-4 border-white">
@@ -169,20 +158,8 @@ function Index() {
                         loading="lazy"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-primary/30 via-transparent to-transparent" />
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
-                        <div className="rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-primary flex items-center gap-2">
-                          <Upload size={12} /> Change photo
-                        </div>
-                      </div>
                     </div>
-                    <p className="text-script text-base text-primary mt-2 text-center">no. {i + 1}</p>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="sr-only"
-                      onChange={(e) => handleUpload(e, group.key, i)}
-                    />
-                  </label>
+                  </div>
                 ))}
               </div>
             </section>
