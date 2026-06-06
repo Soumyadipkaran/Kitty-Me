@@ -3,9 +3,22 @@ import { useEffect, useRef, useState } from "react";
 import { Heart, Music2, Pause, Play, MapPin, Sparkles, Camera } from "lucide-react";
 import floralCats from "@/assets/floral-cats.jpg";
 import pinkBg from "@/assets/pink-bg.jpg";
-import couple1 from "@/assets/couple-1.jpg";
-import couple2 from "@/assets/couple-2.jpg";
-import couple3 from "@/assets/couple-3.jpg";
+import her1 from "@/assets/her-1.jpg";
+import her2 from "@/assets/her-2.jpg";
+import her3 from "@/assets/her-3.jpg";
+import her4 from "@/assets/her-4.jpg";
+import her5 from "@/assets/her-5.jpg";
+import her6 from "@/assets/her-6.jpg";
+import moment1 from "@/assets/moment-1.jpg";
+import moment2 from "@/assets/moment-2.jpg";
+import moment3 from "@/assets/moment-3.jpg";
+import moment4 from "@/assets/moment-4.jpg";
+import us1 from "@/assets/us-1.jpg";
+import us2 from "@/assets/us-2.jpg";
+import us3 from "@/assets/us-3.jpg";
+import us4 from "@/assets/us-4.jpg";
+import us5 from "@/assets/us-5.jpg";
+import us6 from "@/assets/us-6.jpg";
 import { PetalRain } from "@/components/PetalRain";
 import { RoamingCat } from "@/components/RoamingCat";
 
@@ -30,9 +43,10 @@ const GROUPS: Group[] = [
 ];
 
 const DEFAULTS: Record<Group["key"], string[]> = {
-  her: [couple1, couple2, couple1, couple2, couple1, couple2],
-  moments: [couple3, couple3, couple3, couple3],
-  together: [couple2, couple1, couple2, couple1, couple2, couple1],
+  // Swap any of these by replacing the matching file in src/assets/.
+  her: [her1, her2, her3, her4, her5, her6],
+  moments: [moment1, moment2, moment3, moment4],
+  together: [us1, us2, us3, us4, us5, us6],
 };
 
 type Song = { title: string; artist: string; src: string };
