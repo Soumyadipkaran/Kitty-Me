@@ -24,7 +24,7 @@ export const Route = createFileRoute("/")({
 type Group = { key: "her" | "moments" | "together"; title: string; script: string; count: number };
 
 const GROUPS: Group[] = [
-  { key: "her", title: "Just Her", script: "my muse", count: 6 },
+  { key: "her", title: "It's U", script: "my kitty", count: 6 },
   { key: "moments", title: "Little Moments", script: "in between", count: 4 },
   { key: "together", title: "Us, Together", script: "you & me", count: 6 },
 ];
